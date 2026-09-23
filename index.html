@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Word Builder</title><style>
+.ws{--ink:#1c1526;--orange:#f47b20;--purple:#6b3fa0;--soft:#fff4e6;--red:#d62828;font-family:"Trebuchet MS","Segoe UI",Verdana,sans-serif;color:var(--ink)}
+.ws *{box-sizing:border-box}
+.ws .top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:14px}
+.ws .top h1{margin:0;font-size:34px;color:var(--purple);line-height:1.1}
+.ws .top .he{font-size:42px;margin-right:10px;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.ws .name{flex:0 0 3.1in;max-width:50%;border-bottom:3px solid var(--ink);height:44px;position:relative}
+.ws .name::before{content:"✏️";position:absolute;left:0;bottom:6px;font-size:22px}
+.ws .name input{width:100%;height:100%;border:0;background:transparent;font:inherit;font-size:22px;padding:0 0 0 34px;outline:none;color:var(--ink)}
+.ws .act{margin:0 0 16px;padding:12px 14px 14px;border:3px dashed var(--purple);border-radius:14px}
+.ws .act h2{margin:0 0 8px;font-size:21px;display:flex;align-items:center;gap:10px}
+.ws .badge{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:var(--orange);color:#fff;font-weight:700;font-size:20px;display:inline-flex;align-items:center;justify-content:center}
+.ws .ttl{flex:1 1 auto}
+.ws .icon-hint{font-size:24px;margin-left:auto;white-space:nowrap}
+.ws .say{margin-left:4px;font-size:24px;border:2px solid var(--purple);background:#fff;border-radius:12px;padding:2px 10px;cursor:pointer}
+.ws .emo{font-size:54px;line-height:1;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.ws .picwrap{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:4px 6px}
+.ws .picwrap.pick{border-radius:16px}
+.ws .wlabel{font-size:13px;font-weight:700;letter-spacing:1px;color:var(--purple);text-transform:uppercase;line-height:1;white-space:nowrap}
+@media (max-width:640px){.ws .wlabel{font-size:10px}}
+.ws .picwrap.wordonly{padding:0}
+.ws .wtext{display:inline-block;font-size:26px;font-weight:800;letter-spacing:1px;padding:10px 16px;border:3px solid var(--ink);border-radius:12px;background:#fff;white-space:nowrap}
+.ws-digital .stampbtn.textstamp{font-size:16px;font-weight:800;letter-spacing:.5px;padding:8px 10px}
+@media (max-width:640px){.ws .wtext{font-size:18px;padding:6px 10px}}
+.ws .q{margin:10px 0 2px;font-size:18px}
+.ws .startnote{text-align:center;font-size:15px;color:var(--purple);margin-top:6px}
+
+.ws .match{position:relative;display:flex;justify-content:space-between;padding:0 30px}
+.ws .col{display:flex;flex-direction:column;gap:6px}
+.ws .cell{display:flex;align-items:center;gap:6px;height:66px}
+.ws-digital .cell.cellclick{cursor:pointer;border-radius:16px;padding:4px 8px;-webkit-tap-highlight-color:transparent;transition:background .12s}
+.ws-digital .cell.cellclick:hover{background:#f4eefb}
+.ws-digital .cell.cellclick:focus-visible{outline:3px solid var(--purple);outline-offset:2px}
+.ws-digital .cell.cellclick.selcell{background:#ffe9d1;box-shadow:0 0 0 4px var(--orange)}
+.ws-digital .cell.cellclick.selcell .dot::after{background:var(--orange);box-shadow:0 0 0 6px #ffd9b8}
+.ws .col.right .cell{flex-direction:row-reverse}
+.ws .dot{width:44px;height:44px;position:relative;flex:0 0 auto}
+.ws .dot::after{content:"";position:absolute;left:13px;top:13px;width:18px;height:18px;border-radius:50%;background:var(--ink)}
+.ws .lines{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.ws .ln{stroke:var(--purple);stroke-width:6;stroke-linecap:round}
+
+.ws .row{display:flex;justify-content:space-around;align-items:center;padding:6px 0;border-bottom:2px dotted #cfc4dd}
+.ws .row:last-child{border-bottom:0}
+.ws .row .emo{padding:4px 12px}
+.ws .count-row{display:flex;align-items:center;gap:20px;padding:4px 0;border-bottom:2px dotted #cfc4dd}
+.ws .count-row:last-child{border-bottom:0}
+.ws .group{flex:1;font-size:38px;letter-spacing:4px;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.ws .wordgroup{flex:1;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ws .wchip{font-size:16px;font-weight:800;letter-spacing:.5px;padding:5px 10px;border:2px solid var(--ink);border-radius:8px;background:#fff}
+.ws .nums{display:flex;gap:22px}
+.ws .nums.spread{justify-content:space-around;padding:0 60px}
+.ws .num{font-size:40px;font-weight:700;width:64px;height:64px;display:inline-flex;align-items:center;justify-content:center}
+
+.ws .bubble{display:flex;align-items:center;gap:14px;background:var(--soft);border:3px solid var(--orange);border-radius:20px;padding:8px 16px;margin-bottom:10px;flex-wrap:wrap}
+.ws .bubble.wordbubble{padding:14px 18px}
+.ws .wtext.sentence{border:0;padding:0;font-size:20px;font-weight:700;background:transparent;white-space:normal}
+.ws .bubble .emo{font-size:46px}
+.ws .swatch{width:54px;height:54px;border-radius:50%;border:3px solid var(--ink);display:inline-block}
+.ws .swatchwrap{display:inline-flex;flex-direction:column;align-items:center;gap:4px;padding:4px}
+.ws .swatches{display:flex;justify-content:space-around;padding:8px 0 2px}
+.ws .swatches .swatch{width:70px;height:70px}
+
+.ws .sq{width:1.35in;height:1.35in;border:4px solid var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:40px;background:#fff;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.ws .sq.sample{border-color:var(--orange);background:var(--soft)}
+.ws .compare{display:flex;align-items:center;justify-content:space-around;gap:10px;flex-wrap:wrap}
+.ws .options{display:flex;gap:22px;padding:8px 10px}
+.ws .lbl{text-align:center;font-size:30px}
+
+.ws .steps{display:flex;justify-content:space-between;gap:6px}
+.ws .step{text-align:center;flex:1}
+.ws .step .emo{display:block;font-size:58px;margin-bottom:6px}
+.ws .numbox{width:50px;height:50px;border:3px solid var(--ink);border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700}
+.ws .numbox.done,.ws .numbox.set{background:var(--purple);color:#fff;border-color:var(--purple)}
+.ws .numbox.set{background:var(--orange);border-color:var(--orange)}
+.ws-digital .step.click{cursor:pointer;border-radius:14px;padding:4px}
+.ws-digital .step.click:hover{background:#f4eefb}
+
+.ws .wordrow{display:flex;align-items:center;gap:18px;padding:4px 0;border-bottom:2px dotted #cfc4dd}
+.ws .wordrow:last-child{border-bottom:0}
+.ws .wordrow .emo{font-size:50px;width:80px;text-align:center}
+.ws .words{display:flex;gap:30px;flex-wrap:wrap}
+.ws .word{font-size:32px;font-weight:700;letter-spacing:3px;padding:4px 14px;border-radius:999px}
+
+.ws .draw{display:flex;gap:16px;align-items:stretch}
+.ws .picks{display:flex;flex-direction:column;justify-content:space-around;align-items:center;width:1.5in}
+.ws .picks .emo{font-size:44px;padding:2px 8px}
+.ws .canvas{flex:1;aspect-ratio:1/1;max-height:3.6in;border:5px dashed var(--orange);border-radius:8px;background:repeating-linear-gradient(0deg,transparent 0 39px,#f7ecdf 39px 40px),repeating-linear-gradient(90deg,transparent 0 39px,#f7ecdf 39px 40px)}
+
+/* digital interaction */
+.ws .pick{cursor:pointer;transition:box-shadow .12s,transform .12s;-webkit-tap-highlight-color:transparent;user-select:none;border-radius:50%}
+.ws .pick:hover{box-shadow:0 0 0 3px #dccbf0}
+.ws .pick:focus-visible{outline:3px solid var(--purple);outline-offset:3px}
+.ws .pick.ring{box-shadow:0 0 0 6px var(--red);transform:rotate(-2deg)}
+.ws .emo.pick,.ws .word.pick{display:inline-block}
+.ws .sq.pick{border-radius:14px}
+.ws .word.pick{border-radius:999px}
+.ws .pick.xmark{position:relative}
+.ws .pick.xmark.on::after{content:"✖";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:96px;color:var(--red);opacity:.9}
+.ws .donebar{text-align:center;margin:20px 0 6px}
+.ws .bigbtn{font:inherit;font-size:22px;font-weight:700;background:var(--orange);color:#fff;border:0;border-radius:16px;padding:14px 26px;cursor:pointer;box-shadow:0 4px 0 #b95a10}
+.ws .tbtn{font:inherit;font-size:16px;font-weight:700;background:#fff;color:var(--purple);border:2px solid var(--purple);border-radius:12px;padding:8px 14px;cursor:pointer}
+.ws .tbtn.big{font-size:20px;padding:12px 20px}
+.ws .result{border:4px solid var(--purple);border-radius:18px;padding:18px;background:#faf6ff;text-align:center;margin-top:14px}
+.ws .result h2{margin:4px 0 10px;font-size:28px;color:var(--purple)}
+.ws .stars{font-size:60px}
+.ws .breakdown{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px}
+.ws .chip{font-size:22px;font-weight:700;padding:4px 12px;border-radius:999px;border:2px solid var(--line,#d9cfe6);background:#fff}
+.ws .chip.ok{border-color:#2e9e47}
+.ws .chip.try{border-color:var(--orange)}
+.ws .emailrow{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.ws .emailin{font:inherit;font-size:18px;padding:8px 10px;border:2px solid #cbbde0;border-radius:10px;min-width:260px}
+.ws .rbtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.ws .note{font-size:14px;color:#6d5f82;margin:12px 0 0}
+.ws .dtools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.ws .chipbtn{width:44px;height:44px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px var(--ink);cursor:pointer}
+.ws .chipbtn.on{box-shadow:0 0 0 5px var(--orange)}
+.ws .stampbtn{font-size:34px;line-height:1;border:3px solid transparent;background:#fff;border-radius:12px;padding:4px 6px;cursor:pointer;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+.ws .stampbtn.on{border-color:var(--orange);background:var(--soft)}
+.ws .sepbar{width:2px;height:34px;background:#d9cfe6;margin:0 4px}
+.ws .dcanvas{width:100%;max-width:560px;aspect-ratio:1/1;border:5px dashed var(--orange);border-radius:8px;touch-action:none;background:#fff;display:block;margin:0 auto;cursor:crosshair}
+
+.ws .writerow{display:flex;align-items:center;gap:20px;padding:10px 0;border-bottom:2px dotted #cfc4dd;flex-wrap:wrap}
+.ws .writerow:last-child,.ws .buildrow:last-child{border-bottom:0}
+.ws .writeline{flex:1 1 200px;min-width:160px;border-bottom:3px solid var(--ink);height:44px;display:block}
+.ws .writein{flex:1 1 200px;min-width:160px;width:100%;font:inherit;font-size:26px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 12px;border:3px solid #cbbde0;border-radius:10px}
+.ws .answer{flex:1 1 220px;display:flex;flex-direction:column;gap:4px;min-width:180px}
+.ws .hintline{font-size:24px;font-weight:800;letter-spacing:4px;color:var(--purple)}
+.ws .prompt{display:flex;align-items:center;gap:10px;min-width:90px;justify-content:center}
+.ws .tracesvg{height:auto;max-width:100%;display:block;overflow:visible}
+.ws .tracesvg .ttext{font:800 92px "Trebuchet MS","Segoe UI",Verdana,sans-serif;fill:#f3eefb;stroke:var(--purple);stroke-width:3;stroke-dasharray:7 6;stroke-linejoin:round}
+.ws .tracesvg .tbase{stroke:#cfc4dd;stroke-width:3;stroke-dasharray:10 8}
+.ws .tracewrap{display:flex;align-items:center;gap:10px;flex:1 1 320px;min-width:0}
+.ws .tracepad{position:relative;border:3px solid #e2d8f0;border-radius:12px;background:#fff;flex:0 1 auto}
+.ws .tracecv{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.ws .hearbtn{font-size:40px;line-height:1;width:74px;height:74px;border-radius:50%;border:3px solid var(--purple);background:#fff;cursor:pointer;box-shadow:0 3px 0 #4d2c75}
+.ws .hearbtn:active{transform:translateY(2px);box-shadow:0 1px 0 #4d2c75}
+.ws .earprint{display:inline-flex;align-items:center;gap:4px}
+.ws .earprint .emo{font-size:40px}
+.ws .earnum{font-size:22px;font-weight:800;color:var(--purple)}
+.ws .nosound{font-size:14px;color:#6d5f82;max-width:90px}
+.ws .bank{border:3px solid var(--orange);background:var(--soft);border-radius:14px;padding:8px 12px;margin:4px 0 10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ws .banklbl{font-weight:800;font-size:18px}
+.ws .bankwords{display:flex;gap:10px;flex-wrap:wrap}
+.ws .bankword{font-size:24px;font-weight:800;letter-spacing:2px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:4px 12px}
+.ws .bank.hiddenbank{background:#fff;border-style:dashed;margin-top:12px}
+.ws .bankfold{margin-top:16px}
+.ws .foldline{border-top:3px dashed var(--ink);font-size:13px;padding-top:4px;color:#5b4d70;text-align:center}
+.ws .bank.flipped{transform:rotate(180deg);margin-top:8px}
+.ws .buildrow{display:flex;align-items:center;gap:20px;padding:10px 0;border-bottom:2px dotted #cfc4dd;flex-wrap:wrap}
+.ws .buildright{display:flex;flex-direction:column;gap:10px;flex:1 1 240px}
+.ws .tiles,.ws .slots{display:flex;gap:8px;flex-wrap:wrap}
+.ws .tile{font:inherit;font-size:28px;font-weight:800;width:54px;height:54px;border-radius:12px;border:3px solid var(--purple);background:#f3eefb;color:var(--ink);cursor:pointer;box-shadow:0 3px 0 #b8a2d6}
+.ws .tile:disabled{cursor:default}
+.ws-print .tile{box-shadow:none;opacity:1}
+.ws .tile.used{opacity:.25;box-shadow:none}
+.ws .slot{width:54px;height:58px;border:3px solid var(--ink);border-radius:10px;display:inline-flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;background:#fff}
+.ws-digital .slot{cursor:pointer}
+.ws .slot.full{background:#ffe9d1;border-color:var(--orange)}
+.ws .bankbtn{align-self:flex-start}
+.ws .answer .writein,.ws .answer .writeline{flex:0 0 auto}
+
+.ws .keypage{margin-top:24px;padding:16px 20px;border:3px solid var(--purple);border-radius:14px;background:#fbfaf7}
+.ws .keypage h1{margin:0 0 6px;font-size:26px;color:var(--purple)}
+.ws .keypage h2{margin:16px 0 4px;font-size:19px}
+.ws .keypage li{font-size:15px;line-height:1.5;margin:3px 0}
+.ws-print .act,.ws-print .keypage{break-inside:avoid;page-break-inside:avoid}
+.ws-print .keypage{break-before:page;page-break-before:always}
+
+@media (max-width:640px){
+  .ws .top{flex-direction:column;align-items:stretch}
+  .ws .name{max-width:none;flex:0 0 44px}
+  .ws .top h1{font-size:26px}
+  .ws .emo{font-size:42px}
+  .ws .match{padding:0 6px}
+  .ws .num{width:52px;height:52px;font-size:32px}
+  .ws .nums{gap:12px}
+  .ws .nums.spread{padding:0 10px}
+  .ws .sq{width:22vw;height:22vw;font-size:26px}
+  .ws .options{gap:10px}
+  .ws .swatches .swatch{width:52px;height:52px}
+  .ws .word{font-size:24px}
+  .ws .step .emo{font-size:40px}
+  .ws .numbox{width:40px;height:40px;font-size:20px}
+  .ws .tile,.ws .slot{width:44px;height:46px;font-size:22px}
+  .ws .hearbtn{width:60px;height:60px;font-size:32px}
+}
+
+html,body{margin:0}
+body{background:#e9e4ef;padding:14px}
+#root{max-width:880px;margin:0 auto;background:#fff;border:6px solid #f47b20;border-radius:18px;padding:22px}
+@media (max-width:640px){#root{padding:12px;border-width:4px}}
+</style></head><body><div id="root"></div><script>
+const CONFIG={"email":"Burdettechris63@gmail.com","subject":"Worksheet results","staffKey":true,"readAloud":true,"showScore":true,"presetId":"wordbuilder","title":"Word Builder","emoji":"🔤","sections":[{"id":"sej9s5h","type":"match","picStyle":"pic-word","items":["🦇","🐈‍⬛","🛍️","🕸️"]},{"id":"ssblsvn","type":"word","picStyle":"pic","rows":[{"e":"🦇","w":"BAT","d":"CAT"},{"e":"🐈‍⬛","w":"CAT","d":"BAT"},{"e":"🛍️","w":"BAG","d":"BAT"},{"e":"🕸️","w":"WEB","d":"BAG"}]},{"id":"s8myyio","type":"listen","picStyle":"pic","rows":[{"w":"BAT","d":["CAT","BAG"]},{"w":"WEB","d":["BAG","BAT"]},{"w":"CAT","d":["BAT","WEB"]},{"w":"BAG","d":["BAT","CAT"]}]},{"id":"sh3f967","type":"build","picStyle":"pic","rows":[{"e":"🦇","w":"BAT"},{"e":"🐈‍⬛","w":"CAT"},{"e":"🛍️","w":"BAG"},{"e":"🕸️","w":"WEB"}],"prompt":"pic+sound"},{"id":"sf3c46w","type":"write","picStyle":"pic","rows":[{"e":"🦇","w":"BAT"},{"e":"🐈‍⬛","w":"CAT"},{"e":"🛍️","w":"BAG"},{"e":"🕸️","w":"WEB"}],"prompt":"word","bank":"none","help":"none"},{"id":"s4b6wgs","type":"write","picStyle":"pic","rows":[{"e":"🦇","w":"BAT"},{"e":"🐈‍⬛","w":"CAT"},{"e":"🛍️","w":"BAG"},{"e":"🕸️","w":"WEB"}],"prompt":"pic+sound","bank":"hidden","help":"none"}]};
+(function wsRuntime(){
+  'use strict';
+  const PALETTE = {orange:'#f47b20', purple:'#6b3fa0', green:'#2e9e47', blue:'#1e6fd9', pink:'#e0468c', red:'#d62828', yellow:'#f2c400', brown:'#8a5a2b'};
+  const NAMES = Object.keys(PALETTE);
+  const PERMS  = {2:[1,0], 3:[2,0,1], 4:[2,0,3,1], 5:[3,0,4,1,2], 6:[4,2,0,5,1,3]};
+  const OPERMS = {3:[2,0,1], 4:[2,0,3,1], 5:[2,0,3,1,4], 6:[2,0,3,1,5,4]};
+  const LEGEND = {'💻':'design on the computer','👍':'customer says OK','🖨️':'print','🔥':'heat press','🛍️':'bag delivered'};
+  const clamp = (v,a,b) => Math.max(a, Math.min(b, v));
+
+  let SEG = null;
+  try { if (window.Intl && Intl.Segmenter) SEG = new Intl.Segmenter(undefined, {granularity:'grapheme'}); } catch(e) {}
+  let EMO_RE = null;
+  try { EMO_RE = new RegExp('\\p{Extended_Pictographic}(?:\\uFE0F|\\u200D\\p{Extended_Pictographic}|[\\u{1F3FB}-\\u{1F3FF}])*|\\S', 'gu'); } catch(e) {}
+  function glyphs(s){
+    s = String(s == null ? '' : s).trim();
+    if (!s) return [];
+    if (SEG) return Array.from(SEG.segment(s)).map(x => x.segment).filter(g => g.trim());
+    if (EMO_RE) return s.match(EMO_RE) || [];
+    return Array.from(s).filter(g => g.trim());
+  }
+
+  function h(tag, props, ...kids){
+    const el = document.createElement(tag);
+    if (props) for (const k in props){
+      const v = props[k];
+      if (v == null || v === false) continue;
+      if (k === 'class') el.className = v;
+      else if (k === 'dataset') { for (const d in v) el.dataset[d] = v[d]; }
+      else if (k.slice(0,2) === 'on' && typeof v === 'function') el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v === true ? '' : v);
+    }
+    kids.flat().forEach(c => {
+      if (c == null || c === false) return;
+      el.appendChild(typeof c === 'object' ? c : document.createTextNode(String(c)));
+    });
+    return el;
+  }
+
+  function selectable(els, opts, onChange){
+    const o = Object.assign({max:1, cls:'ring'}, opts || {});
+    const sel = [];
+    els.forEach((el, i) => {
+      el.classList.add('pick');
+      if (o.cls === 'xmark') el.classList.add('xmark');
+      el.tabIndex = 0; el.setAttribute('role', 'button');
+      const toggle = () => {
+        const k = sel.indexOf(i);
+        if (k >= 0) { sel.splice(k, 1); el.classList.remove('ring','on'); }
+        else {
+          if (sel.length >= o.max) { const r = sel.shift(); els[r].classList.remove('ring','on'); }
+          sel.push(i); el.classList.add(o.cls === 'xmark' ? 'on' : 'ring');
+        }
+        if (onChange) onChange(sel);
+      };
+      el.addEventListener('click', toggle);
+      el.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); toggle(); } });
+    });
+    return sel;
+  }
+
+  const emo = e => h('span', {class:'emo'}, e);
+  const VOCAB = {
+    '🎃':'pumpkin','👻':'ghost','🦇':'bat','🐈\u200d⬛':'cat','🍬':'candy','🕸️':'web',
+    '🛍️':'bag','💻':'computer','👍':'ok','🖨️':'printer','🔥':'press',
+    '🍎':'apple','🌽':'corn','🍂':'leaf','🥧':'pie','🦃':'turkey','🌻':'sunflower',
+    '🎄':'tree','⛄':'snowman','🎁':'gift','⭐':'star','🔔':'bell','❄️':'snow','🌻':'sunflower'
+  };
+  function pic(e, s){
+    const style = (s && s.picStyle) || 'pic';
+    if (style === 'word') return wordOnly(e);
+    const wrap = h('span', {class:'picwrap'}, emo(e));
+    if (style === 'pic+word' && VOCAB[e]) wrap.appendChild(h('span', {class:'wlabel'}, VOCAB[e].toUpperCase()));
+    return wrap;
+  }
+  function wordOnly(e){
+    if (!VOCAB[e]) return h('span', {class:'picwrap'}, emo(e));
+    return h('span', {class:'picwrap wordonly'}, h('span', {class:'wtext'}, VOCAB[e].toUpperCase()));
+  }
+  const T = {};
+
+  /* ---------- 1. matching lines ---------- */
+  T.match = {
+    label:'Matching lines', hint:'✏️',
+    instr:(s, mode) => mode === 'digital' ? 'Tap a picture, then tap its match' : 'Draw a line to the match',
+    key:s => { const style = s.picStyle || 'pic'; return style === 'pic-word' ? 'Each picture connects to its word: ' + s.items.filter(e => VOCAB[e]).map(e => e + '=' + VOCAB[e].toUpperCase()).join('   ') : 'Each picture connects to its twin: ' + s.items.map(e => e + '\u2194' + e).join('   '); },
+    build(s, ctx){
+      const items = s.items.slice(0,6), n = items.length, perm = PERMS[n] || PERMS[5];
+      const right = perm.map(i => items[i]);
+      const style = s.picStyle || 'pic';
+      const rightIsWord = style === 'pic-word';
+      const wrap = h('div', {class:'match'});
+      const cl = h('div', {class:'col left'}), cr = h('div', {class:'col right'});
+      const L = [], R = [], Lc = [], Rc = [];
+      items.forEach((e, i) => { const d = h('span', {class:'dot', dataset:{side:'L', idx:i}}); L.push(d); const cell = h('div', {class:'cell'}, rightIsWord ? pic(e, {picStyle:'pic'}) : pic(e, s), d); Lc.push(cell); cl.appendChild(cell); });
+      right.forEach((e, j) => { const d = h('span', {class:'dot', dataset:{side:'R', idx:j}}); R.push(d); const cell = h('div', {class:'cell'}, rightIsWord ? wordOnly(e) : pic(e, s), d); Rc.push(cell); cr.appendChild(cell); });
+      wrap.append(cl, cr);
+      if (ctx.mode !== 'digital') return {el:wrap};
+
+      const NS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'lines'); wrap.appendChild(svg);
+      const conns = {}; let sel = null;
+      const centre = d => { const r = d.getBoundingClientRect(), b = wrap.getBoundingClientRect(); return [r.left + r.width/2 - b.left, r.top + r.height/2 - b.top]; };
+      const line = (a, b) => { const l = document.createElementNS(NS, 'line'); l.setAttribute('x1', a[0]); l.setAttribute('y1', a[1]); l.setAttribute('x2', b[0]); l.setAttribute('y2', b[1]); l.setAttribute('class', 'ln'); svg.appendChild(l); };
+      const redraw = () => { svg.textContent = ''; Object.keys(conns).forEach(l => line(centre(L[l]), centre(R[conns[l]]))); };
+      const marks = () => { Lc.concat(Rc).forEach(c => c.classList.remove('selcell')); if (sel) (sel.side === 'L' ? Lc : Rc)[sel.idx].classList.add('selcell'); };
+      const connect = (a, b) => {
+        const l = a.side === 'L' ? a : b, r = a.side === 'L' ? b : a;
+        Object.keys(conns).forEach(k => { if (conns[k] === r.idx) delete conns[k]; });
+        conns[l.idx] = r.idx;
+      };
+      function tap(side, idx){
+        if (sel && sel.side === side && sel.idx === idx) { sel = null; marks(); return; }
+        if (sel && sel.side !== side) { connect(sel, {side, idx}); sel = null; marks(); redraw(); return; }
+        sel = {side, idx}; marks();
+      }
+      [['L', Lc], ['R', Rc]].forEach(([side, arr]) => arr.forEach((cell, idx) => {
+        cell.classList.add('cellclick');
+        cell.tabIndex = 0; cell.setAttribute('role', 'button'); cell.setAttribute('aria-label', side === 'L' ? 'Picture ' + (idx + 1) : 'Match ' + (idx + 1));
+        cell.addEventListener('click', () => tap(side, idx));
+        cell.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); tap(side, idx); } });
+      }));
+      window.addEventListener('resize', redraw);
+      return {el:wrap, check:() => { let g = 0; Object.keys(conns).forEach(l => { if (perm[conns[l]] === +l) g++; }); return {got:g, total:n}; }};
+    }
+  };
+
+  /* ---------- 2. circle the different one ---------- */
+  const ODD_POS = [2,3,1,2,0];
+  T.odd = {
+    label:'Circle the different one', hint:'⭕',
+    instr:() => 'Circle the one that is different',
+    key:s => s.rows.map((r, i) => 'Row ' + (i+1) + ': ' + r[1]).join(',  '),
+    build(s, ctx){
+      const box = h('div');
+      const groups = [];
+      s.rows.forEach((r, i) => {
+        const p = ODD_POS[i % 5];
+        const cells = [0,1,2,3].map(k => pic(k === p ? r[1] : r[0], s));
+        cells.forEach(c => c.classList.add('cellpick'));
+        box.appendChild(h('div', {class:'row'}, cells));
+        groups.push({cells, p, sel: ctx.mode === 'digital' ? selectable(cells) : null});
+      });
+      return {el:box, check: ctx.mode === 'digital' ? () => ({got: groups.filter(g => g.sel[0] === g.p).length, total: groups.length}) : null};
+    }
+  };
+
+  /* ---------- 3. counting ---------- */
+  T.count = {
+    label:'Counting', hint:'🔢',
+    instr:() => 'Circle how many',
+    key:s => s.rows.map(r => (VOCAB[r.e] ? VOCAB[r.e].toUpperCase() : r.e) + ' = ' + r.n).join(',  '),
+    build(s, ctx){
+      const style = s.picStyle || 'pic';
+      const box = h('div'); const groups = [];
+      s.rows.forEach(r => {
+        const start = Math.max(1, r.n - 1), opts = [start, start+1, start+2], correct = opts.indexOf(r.n);
+        const nums = opts.map(v => h('span', {class:'num'}, String(v)));
+        const group = (style === 'word' && VOCAB[r.e])
+          ? h('div', {class:'group wordgroup'}, Array(r.n).fill(0).map(() => h('span', {class:'wchip'}, VOCAB[r.e].toUpperCase())))
+          : h('div', {class:'group'}, Array(r.n).fill(r.e).join(''));
+        box.appendChild(h('div', {class:'count-row'}, group, h('div', {class:'nums'}, nums)));
+        groups.push({correct, sel: ctx.mode === 'digital' ? selectable(nums) : null});
+      });
+      return {el:box, check: ctx.mode === 'digital' ? () => ({got: groups.filter(g => g.sel[0] === g.correct).length, total: groups.length}) : null};
+    }
+  };
+
+  /* ---------- 4. customer order ---------- */
+  T.customer = {
+    label:'Customer order', hint:'⭕',
+    instr:(s, mode) => (s.picStyle === 'word') ? 'Read what the customer wants. Circle it.' : 'The customer wants this. Circle it.',
+    key:s => clamp(s.qty,1,4) + ' bag' + (s.qty > 1 ? 's' : '') + ' with ' + (VOCAB[s.answer] ? VOCAB[s.answer].toUpperCase() : s.answer),
+    build(s, ctx){
+      const qty = clamp(+s.qty || 1, 1, 4);
+      let opts = s.options.slice(0,5); if (opts.indexOf(s.answer) < 0) opts = opts.slice(0,4).concat([s.answer]);
+      const style = s.picStyle || 'pic';
+      const box = h('div');
+      if (style === 'word' && VOCAB[s.answer]) {
+        box.appendChild(h('div', {class:'bubble wordbubble'}, h('span', {class:'wtext sentence'}, 'The customer wants ' + qty + ' bag' + (qty > 1 ? 's' : '') + ' with a ' + VOCAB[s.answer].toUpperCase() + '.')));
+      } else {
+        box.appendChild(h('div', {class:'bubble'}, emo('🧑'), emo('💬'), emo(Array(qty).fill('🛍️').join('')), emo(s.answer)));
+      }
+      box.appendChild(h('p', {class:'q'}, 'How many bags?'));
+      const q1 = [1,2,3,4].map(v => h('span', {class:'num'}, String(v)));
+      box.appendChild(h('div', {class:'nums spread'}, q1));
+      box.appendChild(h('p', {class:'q'}, style === 'word' ? 'Which word matches?' : 'Which picture goes on the bag?'));
+      const q2 = opts.map(o => pic(o, s)); q2.forEach(c => c.classList.add('cellpick'));
+      box.appendChild(h('div', {class:'row'}, q2));
+      if (ctx.mode !== 'digital') return {el:box};
+      const s1 = selectable(q1), s2 = selectable(q2);
+      return {el:box, check:() => ({got:(s1[0] === qty - 1 ? 1 : 0) + (s2[0] === opts.indexOf(s.answer) ? 1 : 0), total:2})};
+    }
+  };
+
+  /* ---------- 5. color match ---------- */
+  T.colors = {
+    label:'Color match', hint:'🎨',
+    instr:() => 'Circle the two colors the customer picked',
+    key:s => s.c1 + ' and ' + s.c2,
+    build(s, ctx){
+      const t = [s.c1, s.c2];
+      const others = NAMES.filter(n => t.indexOf(n) < 0).slice(0,3);
+      const opts = [others[0], t[0], others[1], t[1], others[2]];
+      const style = s.picStyle || 'pic';
+      const sw = n => {
+        const wrap = h('span', {class:'swatchwrap'}, h('span', {class:'swatch', style:'background:' + PALETTE[n], title:n, 'aria-label':n}));
+        if (style === 'word') wrap.appendChild(h('span', {class:'wlabel'}, n.toUpperCase()));
+        return wrap;
+      };
+      const box = h('div');
+      box.appendChild(h('div', {class:'bubble'}, style === 'word' ? h('span', {class:'wtext sentence'}, 'The customer wants these colors:') : emo('💬'), sw(t[0]), sw(t[1])));
+      const els = opts.map(sw);
+      box.appendChild(h('div', {class:'swatches'}, els));
+      if (ctx.mode !== 'digital') return {el:box};
+      const sel = selectable(els, {max:2});
+      return {el:box, check:() => ({got: sel.filter(i => t.indexOf(opts[i]) >= 0).length, total:2})};
+    }
+  };
+
+  /* ---------- 6. check the design ---------- */
+  T.compare = {
+    label:'Check the design', hint:'🔍',
+    instr:() => 'Check the design. Circle the one that matches.',
+    key:s => { const o = s.options.indexOf(s.sample); return 'Matching square is number ' + ((o < 0 ? 1 : o) + 1) + ' (' + s.sample + '). In the mistake row, square 3 (' + s.variant + ') is different from ' + s.base + '.'; },
+    build(s, ctx){
+      let opts = s.options.slice(0,3); let ok = opts.indexOf(s.sample); if (ok < 0) { opts[1] = s.sample; ok = 1; }
+      const box = h('div');
+      const optEls = opts.map(o => h('div', {class:'sq'}, o));
+      box.appendChild(h('div', {class:'compare'},
+        h('div', null, h('div', {class:'lbl'}, emo('✅')), h('div', {class:'sq sample'}, s.sample)),
+        emo('👉'),
+        h('div', {class:'options'}, optEls)));
+      box.appendChild(h('p', {class:'q'}, 'Which one has a mistake? Put an X on it.'));
+      const mEls = [s.base, s.base, s.variant].map(o => h('div', {class:'sq'}, o));
+      box.appendChild(h('div', {class:'compare'}, h('div', {class:'options'}, mEls)));
+      if (ctx.mode !== 'digital') return {el:box};
+      const a = selectable(optEls), b = selectable(mEls, {cls:'xmark'});
+      return {el:box, check:() => ({got:(a[0] === ok ? 1 : 0) + (b[0] === 2 ? 1 : 0), total:2})};
+    }
+  };
+
+  /* ---------- 7. put in order ---------- */
+  T.order = {
+    label:'Put in order', hint:'🔢',
+    instr:(s, mode) => mode === 'digital' ? 'What comes first? Tap the pictures in order. The 1 is done.' : 'What comes first? Write 1 to ' + s.steps.length + '.',
+    key:s => s.steps.map(e => e + (LEGEND[e] ? ' ' + LEGEND[e] : '')).join('  →  ') + '  (numbers 1 to ' + s.steps.length + ')',
+    build(s, ctx){
+      const steps = s.steps.slice(0,6), n = steps.length, perm = OPERMS[n] || OPERMS[5];
+      const wrap = h('div', {class:'steps'}); const assigned = {};
+      perm.forEach(ci => {
+        const box = h('div', {class:'numbox' + (ci === 0 ? ' done' : '')}, ci === 0 ? '1' : '');
+        const st = h('div', {class:'step'}, pic(steps[ci], s), box);
+        wrap.appendChild(st);
+        if (ctx.mode === 'digital' && ci !== 0) {
+          st.classList.add('click'); st.tabIndex = 0; st.setAttribute('role', 'button');
+          const tog = () => {
+            if (assigned[ci]) { delete assigned[ci]; box.textContent = ''; box.classList.remove('set'); }
+            else { const used = Object.keys(assigned).map(k => assigned[k]); let k = 2; while (used.indexOf(k) >= 0) k++; assigned[ci] = k; box.textContent = String(k); box.classList.add('set'); }
+          };
+          st.addEventListener('click', tog);
+          st.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); tog(); } });
+        }
+      });
+      const box = h('div', null, wrap, ctx.mode === 'digital' ? null : h('div', {class:'startnote'}, 'The purple 1 is done for you. Start at 2.'));
+      return {el:box, check: ctx.mode === 'digital' ? () => { let g = 0; for (let ci = 1; ci < n; ci++) if (assigned[ci] === ci + 1) g++; return {got:g, total:n - 1}; } : null};
+    }
+  };
+
+  /* ---------- 8. word match ---------- */
+  T.word = {
+    label:'Word match', hint:'⭐ try it!',
+    instr:() => 'Circle the word that matches',
+    key:s => s.rows.map(r => r.w).join(', '),
+    build(s, ctx){
+      const box = h('div'); const groups = [];
+      s.rows.forEach((r, i) => {
+        const left = i % 2 === 0;
+        const w1 = h('span', {class:'word'}, left ? r.w : r.d), w2 = h('span', {class:'word'}, left ? r.d : r.w);
+        box.appendChild(h('div', {class:'wordrow'}, emo(r.e), h('div', {class:'words'}, w1, w2)));
+        groups.push({correct: left ? 0 : 1, sel: ctx.mode === 'digital' ? selectable([w1, w2]) : null});
+      });
+      return {el:box, check: ctx.mode === 'digital' ? () => ({got: groups.filter(g => g.sel[0] === g.correct).length, total: groups.length}) : null};
+    }
+  };
+
+  /* ---------- 9. draw your own ---------- */
+  T.draw = {
+    label:'Draw your own', hint:'🎨',
+    instr:(s, mode) => mode === 'digital' ? 'Draw your bag design. Tap a picture to stamp it, or draw with the pen.' : 'Circle 2 things. Draw them in the box.',
+    key:() => 'Any picture is correct. Students can use the drawing as a plan for their Canva square.',
+    build(s, ctx){
+      const picks = s.picks.slice(0,8);
+      if (ctx.mode !== 'digital') {
+        return {el:h('div', {class:'draw'}, h('div', {class:'picks'}, picks.map(e => pic(e, s))), h('div', {class:'canvas', role:'img', 'aria-label':'Square drawing box'}))};
+      }
+      const cv = h('canvas', {width:720, height:720, class:'dcanvas'});
+      const c = cv.getContext('2d');
+      const ops = []; let cur = null, stamp = null, color = '#1c1526';
+      const FONT = '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+      const style = s.picStyle || 'pic';
+      const wordMode = style === 'word';
+      const redraw = () => {
+        c.fillStyle = '#fff'; c.fillRect(0, 0, 720, 720);
+        c.strokeStyle = '#f7ecdf'; c.lineWidth = 2;
+        for (let i = 60; i < 720; i += 60) { c.beginPath(); c.moveTo(i, 0); c.lineTo(i, 720); c.stroke(); c.beginPath(); c.moveTo(0, i); c.lineTo(720, i); c.stroke(); }
+        ops.forEach(o => {
+          if (o.t === 's') {
+            if (o.word) { c.font = 'bold 46px "Trebuchet MS",sans-serif'; c.fillStyle = '#1c1526'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(o.word, o.x, o.y); }
+            else { c.font = '120px ' + FONT; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(o.e, o.x, o.y); }
+          } else {
+            c.strokeStyle = o.c; c.fillStyle = o.c; c.lineWidth = 10; c.lineCap = 'round'; c.lineJoin = 'round';
+            if (o.pts.length === 1) { c.beginPath(); c.arc(o.pts[0][0], o.pts[0][1], 5, 0, 7); c.fill(); }
+            else { c.beginPath(); c.moveTo(o.pts[0][0], o.pts[0][1]); o.pts.slice(1).forEach(p => c.lineTo(p[0], p[1])); c.stroke(); }
+          }
+        });
+      };
+      const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * 720 / r.width, (e.clientY - r.top) * 720 / r.height]; };
+      cv.addEventListener('pointerdown', e => {
+        e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch(_) {}
+        const p = pos(e);
+        if (stamp !== null) { const e0 = picks[stamp]; ops.push({t:'s', e:e0, word: (wordMode && VOCAB[e0]) ? VOCAB[e0].toUpperCase() : null, x:p[0], y:p[1]}); }
+        else { cur = {t:'p', c:color, pts:[p]}; ops.push(cur); }
+        redraw();
+      });
+      cv.addEventListener('pointermove', e => { if (cur) { cur.pts.push(pos(e)); redraw(); } });
+      const stop = () => { cur = null; };
+      cv.addEventListener('pointerup', stop); cv.addEventListener('pointercancel', stop);
+
+      const colorBtns = ['#1c1526','#d62828','#f47b20','#2e9e47','#1e6fd9','#6b3fa0'].map(col => h('button', {type:'button', class:'chipbtn' + (col === color ? ' on' : ''), style:'background:' + col, 'aria-label':'Pen color', onclick:() => { color = col; stamp = null; sync(); }}));
+      const stampBtns = picks.map((e, i) => h('button', {type:'button', class:'stampbtn' + (wordMode ? ' textstamp' : ''), title:VOCAB[e] || 'Stamp', 'aria-label':'Stamp' + (VOCAB[e] ? ': ' + VOCAB[e] : ''), onclick:() => { stamp = stamp === i ? null : i; sync(); }}, (wordMode && VOCAB[e]) ? VOCAB[e].toUpperCase() : e));
+      const sync = () => {
+        colorBtns.forEach((b, i) => b.classList.toggle('on', stamp === null && b.style.background !== '' && ['#1c1526','#d62828','#f47b20','#2e9e47','#1e6fd9','#6b3fa0'][i] === color));
+        stampBtns.forEach((b, i) => b.classList.toggle('on', stamp === i));
+      };
+      sync();
+      const undo = h('button', {type:'button', class:'tbtn', onclick:() => { ops.pop(); redraw(); }}, '↩️ Undo');
+      const clear = h('button', {type:'button', class:'tbtn', onclick:() => { ops.length = 0; redraw(); }}, '🧽 Clear');
+      redraw();
+      const el = h('div', null, h('div', {class:'dtools'}, colorBtns, h('span', {class:'sepbar'}), stampBtns, h('span', {class:'sepbar'}), undo, clear), cv);
+      return {el, canvas:cv, hasDrawing:() => ops.length > 0};
+    }
+  };
+
+  /* ---------- shared helpers for the word sections ---------- */
+  function speak(text){
+    try {
+      const t = String(text).replace(/\p{Extended_Pictographic}|\uFE0F|\u200D/gu, '').trim();
+      if (!t) return;
+      const u = new SpeechSynthesisUtterance(t); u.rate = 0.85;
+      window.speechSynthesis.cancel(); window.speechSynthesis.speak(u);
+    } catch(e) {}
+  }
+  const canSpeak = () => !!(window.speechSynthesis && window.SpeechSynthesisUtterance);
+  const say = w => String(w).toLowerCase();   /* lowercase so voices do not spell out C-A-T */
+  const hasPic = p => p === 'pic' || p === 'pic+sound';
+  const hasSound = p => p === 'sound' || p === 'pic+sound';
+  const wordRows = s => (s.rows || (s.words || []).map(w => ({e:'', w}))).slice(0, 6);
+
+  function soundBtn(word, ctx, n){
+    if (ctx.mode !== 'digital') return h('span', {class:'earprint', title:'Staff reads this word aloud'}, h('span', {class:'emo'}, '🔊'), h('span', {class:'earnum'}, String(n)));
+    if (!canSpeak()) return h('span', {class:'earprint'}, h('span', {class:'emo'}, '🔊'), h('span', {class:'nosound'}, 'Ask staff to say it'));
+    return h('button', {type:'button', class:'hearbtn', 'aria-label':'Hear the word', onclick:() => speak(say(word))}, '🔊');
+  }
+  function promptEl(r, prompt, ctx, n){
+    const box = h('div', {class:'prompt'});
+    if (hasPic(prompt)) box.appendChild(r.e ? emo(r.e) : h('span', {class:'wtext'}, r.w));
+    if (hasSound(prompt)) box.appendChild(soundBtn(r.w, ctx, n));
+    return box;
+  }
+  function helpEl(w, help){
+    if (help === 'blanks') return h('span', {class:'hintline', 'aria-label':w.length + ' letters'}, w.split('').map(() => '_').join(' '));
+    if (help === 'first') return h('span', {class:'hintline', 'aria-label':'Starts with ' + w[0]}, w[0] + ' ' + w.slice(1).split('').map(() => '_').join(' '));
+    return null;
+  }
+  /* dashed outline letters (SVG prints the same everywhere) */
+  function traceSvg(w){
+    const NS = 'http://www.w3.org/2000/svg', per = 62, W = w.length * per + 24, H = 110;
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); svg.setAttribute('class', 'tracesvg');
+    svg.setAttribute('aria-label', 'Trace the word ' + w); svg.setAttribute('role', 'img');
+    svg.style.width = Math.round(W * 1.05) + 'px';
+    const base = document.createElementNS(NS, 'line');
+    [['x1',6],['y1',92],['x2',W - 6],['y2',92]].forEach(a => base.setAttribute(a[0], a[1])); base.setAttribute('class', 'tbase');
+    svg.appendChild(base);
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('x', 12); t.setAttribute('y', 90); t.setAttribute('textLength', w.length * per); t.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+    t.setAttribute('class', 'ttext'); t.textContent = w;
+    svg.appendChild(t);
+    return {svg, W, H};
+  }
+  /* finger / mouse tracing on top of the dashed word */
+  function tracePad(w){
+    const {svg, W, H} = traceSvg(w);
+    const pad = h('div', {class:'tracepad'});
+    pad.style.width = 'min(100%, ' + Math.round(W * 1.35) + 'px)';
+    svg.style.width = '100%';
+    const cv = h('canvas', {width:W * 2, height:H * 2, class:'tracecv', 'aria-label':'Trace here'});
+    pad.append(svg, cv);
+    const c = cv.getContext('2d'); let drawing = false, last = null, inked = false;
+    const pos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; };
+    cv.addEventListener('pointerdown', e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch(_) {} drawing = true; last = pos(e); c.beginPath(); c.arc(last[0], last[1], 7, 0, 7); c.fillStyle = '#f47b20'; c.fill(); inked = true; });
+    cv.addEventListener('pointermove', e => {
+      if (!drawing) return; const p = pos(e);
+      c.strokeStyle = '#f47b20'; c.lineWidth = 14; c.lineCap = 'round'; c.lineJoin = 'round';
+      c.beginPath(); c.moveTo(last[0], last[1]); c.lineTo(p[0], p[1]); c.stroke(); last = p;
+    });
+    const stop = () => { drawing = false; };
+    cv.addEventListener('pointerup', stop); cv.addEventListener('pointercancel', stop); cv.addEventListener('pointerleave', stop);
+    const clr = h('button', {type:'button', class:'tbtn', onclick:() => { c.clearRect(0, 0, cv.width, cv.height); inked = false; }}, '🧽 Clear');
+    return {el:h('div', {class:'tracewrap'}, pad, clr), traced:() => inked};
+  }
+  function wordBank(words, mode, ctx, onOpen){
+    const sorted = words.slice().sort();
+    const list = h('div', {class:'bankwords'}, sorted.map(w => h('span', {class:'bankword'}, w)));
+    if (mode === 'show') return h('div', {class:'bank'}, h('span', {class:'banklbl'}, '📦 Word bank'), list);
+    if (mode !== 'hidden') return null;
+    if (ctx.mode !== 'digital') return h('div', {class:'bankfold'}, h('div', {class:'foldline'}, '✂️ Staff: fold this strip under. Unfold it if the student needs help.'), h('div', {class:'bank flipped'}, h('span', {class:'banklbl'}, '📦 Word bank'), list));
+    list.hidden = true;
+    const btn = h('button', {type:'button', class:'tbtn bankbtn', onclick:() => { list.hidden = !list.hidden; btn.textContent = list.hidden ? '👀 Need help? Show the word bank' : '🙈 Hide the word bank'; if (!list.hidden) onOpen(); }}, '👀 Need help? Show the word bank');
+    return h('div', {class:'bank hiddenbank'}, btn, list);
+  }
+  const clean = v => String(v || '').toUpperCase().replace(/[^A-Z'-]/g, '');
+
+  /* ---------- 10. write / type the word ---------- */
+  const WRITE_INSTR = {
+    word:      ['Trace the word, then write it on the line.', 'Trace the word with your finger. Then type it.'],
+    pic:       ['Look at the picture. Write the word.', 'Look at the picture. Type the word.'],
+    sound:     ['Listen to the word. Write it.', 'Tap the speaker to hear the word. Type it.'],
+    'pic+sound':['Look and listen. Write the word.', 'Look at the picture. Tap the speaker. Type the word.']
+  };
+  T.write = {
+    label:'Write / type the word', hint:'✍️',
+    instr:(s, mode) => (WRITE_INSTR[s.prompt] || WRITE_INSTR.word)[mode === 'digital' ? 1 : 0],
+    key:s => { const r = wordRows(s), p = s.prompt || 'word'; return (hasSound(p) ? 'Read these aloud in order: ' : '') + r.map((x, i) => (hasSound(p) ? (i + 1) + '. ' : '') + (x.e && hasPic(p) ? x.e + ' ' : '') + x.w).join(',  ') + (s.bank === 'hidden' ? '  (word bank is folded under at the bottom)' : ''); },
+    build(s, ctx){
+      const rows = wordRows(s), prompt = s.prompt || 'word', help = s.help || 'none';
+      const box = h('div'); const items = []; let bankUsed = false;
+      if (s.bank === 'show') box.appendChild(wordBank(rows.map(r => r.w), 'show', ctx));
+      rows.forEach((r, i) => {
+        const row = h('div', {class:'writerow' + (prompt === 'word' ? ' traceRow' : '')});
+        let tp = null;
+        if (prompt === 'word') {
+          if (ctx.mode === 'digital') { tp = tracePad(r.w); row.appendChild(tp.el); }
+          else row.appendChild(traceSvg(r.w).svg);
+        } else row.appendChild(promptEl(r, prompt, ctx, i + 1));
+        const ans = h('div', {class:'answer'});
+        const hl = helpEl(r.w, help); if (hl) ans.appendChild(hl);
+        if (ctx.mode === 'digital') {
+          const inp = h('input', {type:'text', class:'writein', autocomplete:'off', autocorrect:'off', spellcheck:'false', autocapitalize:'characters', 'aria-label':'Type word ' + (i + 1)});
+          ans.appendChild(inp); items.push({w:r.w, inp, tp});
+        } else ans.appendChild(h('span', {class:'writeline'}));
+        row.appendChild(ans);
+        box.appendChild(row);
+      });
+      if (s.bank === 'hidden') box.appendChild(wordBank(rows.map(r => r.w), 'hidden', ctx, () => { bankUsed = true; }));
+      if (ctx.mode !== 'digital') return {el:box};
+      return {el:box, check:() => {
+        const traced = items.filter(x => x.tp && x.tp.traced()).length;
+        const notes = [];
+        if (prompt === 'word') notes.push('traced ' + traced + ' of ' + items.length);
+        if (s.bank === 'hidden') notes.push(bankUsed ? 'opened the word bank' : 'did not need the word bank');
+        const wrong = items.filter(x => clean(x.inp.value) !== x.w).map(x => x.w + '→' + (clean(x.inp.value) || '(blank)'));
+        if (wrong.length) notes.push('typed ' + wrong.join(', '));
+        return {got: items.filter(x => clean(x.inp.value) === x.w).length, total: items.length, note: notes.join('; ')};
+      }};
+    }
+  };
+
+  /* ---------- 11. listen and circle ---------- */
+  T.listen = {
+    label:'Listen and circle', hint:'👂',
+    instr:(s, mode) => mode === 'digital' ? 'Tap the speaker. Tap the word you hear.' : 'Listen to the word. Circle it.',
+    key:s => 'Read these aloud in order: ' + s.rows.map((r, i) => (i + 1) + '. ' + r.w).join(',  '),
+    build(s, ctx){
+      const box = h('div'); const groups = [];
+      s.rows.slice(0, 5).forEach((r, i) => {
+        const all = [r.w].concat(r.d.slice(0, 3)); const n = all.length, pos = (i * 2 + 1) % n;
+        const opts = all.slice(1); opts.splice(pos, 0, r.w);
+        const els = opts.map(w => h('span', {class:'word'}, w));
+        box.appendChild(h('div', {class:'wordrow'}, h('div', {class:'prompt'}, soundBtn(r.w, ctx, i + 1)), h('div', {class:'words'}, els)));
+        groups.push({correct:pos, sel: ctx.mode === 'digital' ? selectable(els) : null});
+      });
+      return {el:box, check: ctx.mode === 'digital' ? () => ({got: groups.filter(g => g.sel[0] === g.correct).length, total: groups.length}) : null};
+    }
+  };
+
+  /* ---------- 12. spell it with letter tiles ---------- */
+  function scramble(w, row){
+    const a = w.split(''); if (a.length < 2) return a;
+    let out = a.map((ch, i) => ({ch, k:(i * 7 + 3) % (a.length + 2)})).sort((x, y) => x.k - y.k).map(x => x.ch);
+    for (let r = (row || 0) % a.length; r > 0; r--) out.push(out.shift());
+    for (let tries = 0; out.join('') === w && tries < a.length; tries++) out.push(out.shift());
+    return out.join('') === w ? a.reverse() : out;
+  }
+  T.build = {
+    label:'Spell it (letter tiles)', hint:'🔤',
+    instr:(s, mode) => mode === 'digital'
+      ? (hasSound(s.prompt || 'pic') && !hasPic(s.prompt || 'pic') ? 'Tap the speaker. Tap the letters in order.' : 'Look at the picture. Tap the letters in order to spell it.')
+      : 'Use the letters to spell the word. Write one letter in each box.',
+    key:s => wordRows(s).map(r => (r.e ? r.e + ' ' : '') + r.w).join(',  '),
+    build(s, ctx){
+      const rows = wordRows(s).slice(0, 5), prompt = s.prompt || 'pic';
+      const box = h('div'); const items = [];
+      rows.forEach((r, i) => {
+        const letters = scramble(r.w, i);
+        const tiles = letters.map(ch => h('button', {type:'button', class:'tile', disabled: ctx.mode === 'digital' ? null : true}, ch));
+        const slots = r.w.split('').map(() => h('span', {class:'slot'}));
+        const filled = r.w.split('').map(() => null);
+        box.appendChild(h('div', {class:'buildrow'}, promptEl(r, prompt, ctx, i + 1), h('div', {class:'buildright'}, h('div', {class:'tiles'}, tiles), h('div', {class:'slots'}, slots))));
+        if (ctx.mode === 'digital') {
+          tiles.forEach((t, ti) => t.addEventListener('click', () => {
+            const k = filled.indexOf(null); if (k < 0) return;
+            filled[k] = ti; slots[k].textContent = letters[ti]; slots[k].classList.add('full'); t.disabled = true; t.classList.add('used');
+          }));
+          slots.forEach((sl, k) => { sl.tabIndex = 0; sl.setAttribute('role', 'button'); sl.setAttribute('aria-label', 'Letter box ' + (k + 1) + ', tap to take the letter back');
+            const back = () => { const ti = filled[k]; if (ti == null) return; filled[k] = null; sl.textContent = ''; sl.classList.remove('full'); tiles[ti].disabled = false; tiles[ti].classList.remove('used'); };
+            sl.addEventListener('click', back); sl.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); back(); } }); });
+          items.push({w:r.w, get:() => filled.map(ti => ti == null ? '' : letters[ti]).join('')});
+        }
+      });
+      if (ctx.mode !== 'digital') return {el:box};
+      return {el:box, check:() => ({got: items.filter(x => x.get() === x.w).length, total: items.length})};
+    }
+  };
+
+  function shell(i, s, body, ctx, cfg){
+    const def = T[s.type];
+    const text = (s.title && s.title.trim()) || def.instr(s, ctx.mode);
+    const h2 = h('h2', null, h('span', {class:'badge'}, String(i + 1)), h('span', {class:'ttl'}, text), h('span', {class:'icon-hint'}, def.hint));
+    if (ctx.mode === 'digital' && cfg.readAloud && window.speechSynthesis) h2.appendChild(h('button', {type:'button', class:'say', title:'Read aloud', 'aria-label':'Read aloud', onclick:() => speak(text)}, '🔊'));
+    return h('section', {class:'act'}, h2, body);
+  }
+  function buildKey(cfg){
+    const ul = h('ul');
+    cfg.sections.forEach((s, i) => { const d = T[s.type]; if (d) ul.appendChild(h('li', null, h('b', null, (i + 1) + '. ' + d.label + ': '), d.key(s))); });
+    return h('section', {class:'keypage'},
+      h('h1', null, 'Staff page: do not hand out'),
+      h('h2', null, 'Answer key'), ul,
+      h('h2', null, 'Ways to adapt'),
+      h('ul', null,
+        h('li', null, 'Do it as a group with the page on a big screen. Let students come up to circle or draw.'),
+        h('li', null, 'Say each direction out loud and point to the example. A peer helper works well.'),
+        h('li', null, 'Use thick markers or dot markers for students with fine-motor challenges.'),
+        h('li', null, 'Skip sections as needed. The reading sections (word match, listen, spell it, write / type) are optional.'),
+        h('li', null, 'For 🔊 sections on paper, read each word aloud in the order shown in the answer key.')));
+  }
+  function dl(name, blob){
+    const a = h('a', {href:URL.createObjectURL(blob), download:name}); document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800);
+  }
+
+  function mount(root, cfg, mode){
+    root.textContent = '';
+    root.classList.remove('ws-print', 'ws-digital'); root.classList.add('ws', 'ws-' + mode);
+    const ctx = {mode}; const parts = [];
+    const nameEl = mode === 'digital' ? h('input', {type:'text', placeholder:'Name', 'aria-label':'Name', autocomplete:'off'}) : null;
+    let lastTypedName = '';
+    if (nameEl) nameEl.addEventListener('input', () => { lastTypedName = nameEl.value.trim(); });
+    root.appendChild(h('div', {class:'top'}, h('h1', null, cfg.emoji ? h('span', {class:'he'}, cfg.emoji) : null, cfg.title || 'Worksheet'), h('div', {class:'name'}, nameEl)));
+    cfg.sections.forEach((s, i) => {
+      if (!T[s.type]) return;
+      const b = T[s.type].build(s, ctx);
+      parts.push({s, b});
+      root.appendChild(shell(i, s, b.el, ctx, cfg));
+    });
+    if (mode === 'print') { if (cfg.staffKey) root.appendChild(buildKey(cfg)); return; }
+
+    const done = h('button', {type:'button', class:'bigbtn'}, "🎉 I'm done!");
+    const out = h('div', {class:'resultwrap'});
+    root.appendChild(h('div', {class:'donebar'}, done)); root.appendChild(out);
+
+    done.addEventListener('click', () => {
+      let got = 0, total = 0; const details = [];
+      parts.forEach((p, i) => { if (!p.b.check) return; const r = p.b.check(); got += r.got; total += r.total; details.push({n:i + 1, label:T[p.s.type].label, got:r.got, total:r.total, note:r.note || ''}); });
+      const drawPart = parts.filter(p => p.b.canvas)[0];
+      const drew = !!(drawPart && drawPart.b.hasDrawing());
+      const pct = total ? got / total : 1;
+      const stars = pct >= 0.9 ? '⭐⭐⭐' : pct >= 0.6 ? '⭐⭐' : '⭐';
+      try { nameEl.blur(); } catch(e) {}
+      const liveVal = (nameEl.value || '').trim();
+      const name = liveVal || lastTypedName;
+      const text = () => {
+        const L = [(cfg.title || 'Worksheet') + ' - results', 'Student: ' + (name || '(no name entered)'), 'Date: ' + new Date().toLocaleString(), 'Score: ' + got + ' of ' + total, ''];
+        details.forEach(d => L.push(d.n + '. ' + d.label + ': ' + d.got + ' of ' + d.total + (d.note ? '  (' + d.note + ')' : '')));
+        if (drawPart) L.push('', 'Drawing: ' + (drew ? 'made (saved as a picture by the student)' : 'not started'));
+        return L.join('\n');
+      };
+      out.textContent = '';
+      const chips = h('div', {class:'breakdown'}, details.map(d => h('span', {class:'chip ' + (d.got === d.total ? 'ok' : 'try')}, (d.got === d.total ? '✅ ' : '🔁 ') + d.n)));
+      const em = h('input', {type:'email', class:'emailin', placeholder:'name@example.com', value:cfg.email || '', 'aria-label':'Email address for results'});
+      const btns = h('div', {class:'rbtns'},
+        h('button', {type:'button', class:'bigbtn', onclick:() => {
+          const q = 'to=' + encodeURIComponent(em.value.trim()) + '&su=' + encodeURIComponent((cfg.subject || 'Worksheet results') + (name ? ' - ' + name : '')) + '&body=' + encodeURIComponent(text());
+          const w = window.open('https://mail.google.com/mail/?view=cm&fs=1&' + q, '_blank');
+          if (!w) window.location.href = 'https://mail.google.com/mail/?view=cm&fs=1&' + q;
+        }}, '📧 Open in Gmail'),
+        h('button', {type:'button', class:'tbtn big', onclick:() => {
+          const a = h('a', {href:'mailto:' + em.value.trim() + '?subject=' + encodeURIComponent((cfg.subject || 'Worksheet results') + (name ? ' - ' + name : '')) + '&body=' + encodeURIComponent(text())});
+          document.body.appendChild(a); a.click(); a.remove();
+        }}, '✉️ Email app'),
+        h('button', {type:'button', class:'tbtn big', onclick:function(){
+          const btn = this, t = text();
+          const ok = () => { btn.textContent = '✅ Copied'; setTimeout(() => { btn.textContent = '📋 Copy results'; }, 2000); };
+          const fallback = () => { const ta = h('textarea', {style:'position:fixed;left:-999px'}); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch(e) {} ta.remove(); };
+          if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, fallback); else fallback();
+        }}, '📋 Copy results'),
+        h('button', {type:'button', class:'tbtn big', onclick:() => dl('results' + (name ? '-' + name.replace(/[^\w-]+/g, '_') : '') + '.txt', new Blob([text()], {type:'text/plain'}))}, '💾 Save results file'),
+        drawPart && drew ? h('button', {type:'button', class:'tbtn big', onclick:() => drawPart.b.canvas.toBlob(b => dl('my-design' + (name ? '-' + name.replace(/[^\w-]+/g, '_') : '') + '.png', b))}, '🖼️ Save my drawing') : null,
+        h('button', {type:'button', class:'tbtn big', onclick:() => { mount(root, cfg, mode); window.scrollTo(0, 0); }}, '🔄 Start over'));
+      out.appendChild(h('div', {class:'result'},
+        h('div', {class:'stars'}, stars),
+        h('h2', null, cfg.showScore ? 'You got ' + got + ' of ' + total + '!' : 'Great work!'),
+        cfg.showScore ? chips : null,
+        h('div', {class:'emailrow'}, h('label', null, '📧 Send to: '), em),
+        btns,
+        h('p', {class:'note'}, 'Open in Gmail needs internet and a Gmail sign-in. No internet? Use Copy results or Save results file. Attach the saved drawing if you want to send it too.')));
+      out.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
+
+  window.WS = {mount:mount, h:h, glyphs:glyphs, PALETTE:PALETTE, NAMES:NAMES, TYPES:T, VOCAB:VOCAB};
+})();
+WS.mount(document.getElementById("root"),CONFIG,"digital");
+</script></body></html>
